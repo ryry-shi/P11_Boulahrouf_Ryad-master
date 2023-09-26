@@ -5,3 +5,4 @@ def test_index(client):
     assert "Please enter your secretary email to continue:" in response.get_data(
         as_text=True
     )
+    
