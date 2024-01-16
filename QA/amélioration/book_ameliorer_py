@@ -1,0 +1,17 @@
+import json
+from flask import Flask,render_template,request,redirect,flash,url_for
+import datetime
+
+@app.route('/book/<competition>/<club>')
+def book(competition,club):
+    try:
+        foundClub = [c for c in clubs if c['name'] == club][0]
+        foundCompetition = [c for c in competitions if c['name'] == competition][0]
+        date_passed = datetime.datetime.fromisoformat(foundCompetition["date"])
+        if date_passed < datetime.datetime.today():
+            flash("vous ne pouvez pas réservez une place pour un spectacle déja produit")
+            return render_template('welcome.html',club=foundClub,competitions=competitions)
+        if foundClub and foundCompetition:
+            return render_template('booking.html',club=foundClub,competition=foundCompetition)
+    except IndexError:
+        return render_template("index.html"),404

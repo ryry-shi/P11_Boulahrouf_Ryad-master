@@ -7,8 +7,7 @@ competitions = server.loadCompetitions()
 def test_purchase_valid_12_place(client, methods=["POST"]):
     club = [c for c in clubs if c["name"]][0]
     competition = [c for c in competitions if c["name"]][0]
-    print(club, competition)
-    places = 12
+    places = 13
     response = client.post(
         "/purchasePlaces",
         data={
@@ -22,6 +21,8 @@ def test_purchase_valid_12_place(client, methods=["POST"]):
         f"Points available: 1"
         in response.get_data(as_text=True)
     )
+
+
     
 def test_purchase_valid_not_allowed_12_place(client, mocker, monkeypatch, methods=["POST"]):
     mock_load_club = mocker.patch(
@@ -32,6 +33,7 @@ def test_purchase_valid_not_allowed_12_place(client, mocker, monkeypatch, method
             {"name": "c", "email": "utilisateur3co.uk", "points": "13"},
         ],
     )
+    print(mock_load_club)
     monkeypatch.setattr("server.clubs", mock_load_club)
     mock_load_competition = mocker.patch(
         "server.competitions",
@@ -43,6 +45,7 @@ def test_purchase_valid_not_allowed_12_place(client, mocker, monkeypatch, method
     monkeypatch.setattr("server.competitions", mock_load_competition)
     club = [c for c in mock_load_club if c["name"]][0]
     competition = [c for c in mock_load_competition if c["name"]][0]
+    print(competition)
     places = 13
     if club:
         response = client.post(
